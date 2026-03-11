@@ -30,13 +30,21 @@ pipeline {
                 )
             }
         }
+        stage('Prepare Environment') {
+            steps {
+                echo 'Cleaning up dangling Docker networks...'
+                // -f (force) skips the confirmation prompt
+                // || true ensures the pipeline continues even if prune returns a non-zero exit code
+                sh 'docker network prune -f || true'
+            }
+        }
         stage('Deploy') {
             when { 
                 anyOf { branch 'develop'; branch 'main'; branch 'release/*' } 
             }
             steps {
                 echo "Deploying ${IMAGE_NAME} to ${env.BRANCH_NAME} environment..."
-                sh "docker-compose up -d ecommerce-product"
+                sh "docker compose up -d ecommerce-product"
             }
         }
 
