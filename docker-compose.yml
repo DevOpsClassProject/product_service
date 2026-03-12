@@ -18,5 +18,4 @@ services:
 
 networks:
   ecommerce-net:
-    name: ecommerce-net
-    driver: bridge
+    external: true
